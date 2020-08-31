@@ -2,7 +2,6 @@ const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
 
-const groceriesIndex=require('./routes/groceriesIndex')
 require('dotenv').config()
 
 
@@ -15,19 +14,15 @@ conection.once('open',()=>{
     console.log("dfgsdg")
 })
 
-
-
-//accessing database testdb and then sending  collection loginIds
-const get_db=()=>{       
-        const db=client.db('test')
-        return new Promise(function(resolve, reject){
-            resolve(db);
-        });
-    }
 const app = express()
 
+app.use(function (req,res,next){
+    console.log('handling request : ',req.url+" with method "+req.method);
+    next();
+  })
+  
 app.use(cors())
 app.use(express.json())
-app.use('/',groceriesIndex)
+app.use('/',require('./routes/groceriesIndex'))
 var port =  process.env.PORT ||8080;
 app.listen(port,()=>{console.log('listening at ',port)})

@@ -75,7 +75,7 @@ class ViewGroceryList extends React.Component {
   render() {
     return (
         <div>
-          <div className="add-todo-header">Todo List</div>
+          <div className="grocery-header">Todo List</div>
                 <div
                 className="input-group-prepend mt-4"
                 style={{ justifyContent: "center" }}

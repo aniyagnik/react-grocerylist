@@ -1,52 +1,58 @@
 import React from "react";
+import axios from "axios";
 
-class ViewGroceryList extends React.Component {
+class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state={
       groceryName: "",
-      quantity:null
+      quantity:0
     }
   }
 
   handleInputChange = event => {
-    const [name,value] = event.target
+    const {name,value} = event.target
     this.setState({
       [name]:value
     });
   };
 
-  handleOnClick = () => {
+  onSubmit = (e) => {
+    e.preventDefault()
     const grocery={
-        name: this.state.groceryName,
+        groceryName: this.state.groceryName,
         quantity:this.state.quantity
       }
+      axios.post('http://localhost:8080/add',grocery)
+      .then(res=>{
+        console.log('obj added ',res.data)
+      })
   };
   
 
   render() {
     return (
         <div>
-          <div className="add-todo-header">ADD GROCIRIES</div>
+          <div className="grocery-header">ADD GROCIRIES</div>
           <div
                 className="input-group-prepend mt-4"
                 style={{ justifyContent: "center" }}
                 >
                 <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     aria-label="Small"
                     aria-describedby="inputGroup-sizing-sm"
-                    style={{ width: "60%" }}
+                    style={{ width: "50%" }}
                     name='groceryName'
                     placeholder='enter grocery name'
                     value={this.state.groceryName}
                     onChange={this.handleInputChange}
                 />
-
+                &nbsp;
                 <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     aria-label="Small"
                     aria-describedby="inputGroup-sizing-sm"
                     style={{ width: "20%" }}
@@ -55,11 +61,11 @@ class ViewGroceryList extends React.Component {
                     value={this.state.quantity}
                     onChange={this.handleInputChange}
                 />
-                <button onClick={this.handleOnClick}>Add Grocery</button>
+                <button onClick={this.onSubmit}>Add Grocery</button>
           </div>
         </div>
     );
   }
 }
 
-export default ViewGroceryList;
+export default Home;

@@ -9,14 +9,15 @@ router.get('/',(req, res) => {
 });
 
 router.post('/add', (req, res) => {
+  console.log('in post add ',req.body)
   const {groceryName} = req.body
   const {quantity} = req.body
 
   const newGDetail = new Groceries({
-    grocertName,
+    groceryName,
     quantity
   });
-
+  console.log("asd ", newGDetail)
   newGDetail.save()
   .then(() => res.json('Groceries added!'))
   .catch(err => res.status(400).json('Error: ' + err));
