@@ -2,20 +2,80 @@
     text-align: center;
   }
   
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-    height: 80px;
-  }
-  
   nav{
     display: flex;
     justify-content: space-around;
     align-items: center;
     min-height: 10vh;
-    background-color: rgb(80, 186, 200);
+    background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
     color: whitesmoke;
   }
+
+  .gBox{
+    margin-top:5vh;
+    background-color: crimson;
+    color:white;
+    border-bottom: 5px solid black;
+    max-width: 50vw;
+    padding:2vh 0vh;
+    border-top-right-radius:90% ;
+    border-top-left-radius:90% ;
+    margin-bottom: 2vh;
+  }
+
+  .confirm{
+    background-color: chartreuse;
+    color: crimson;
+    display: block;
+  }
+.confirm:hover{
+  color:chartreuse;
+  background-color: crimson;
   
+}
   input[type='text']{
-    width:100%
+    width:100%;
+    margin:0 1vw;
+  }
+  input[type='checkbox']{
+    margin: 0 3vw;
+  }
+
+  button{
+    margin:0vh 3vh;
+    padding: 0.5vh 3vw;
+    color:whitesmoke;
+    background-color: blue;
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  button:hover{
+    color:blue;
+    background-color: whitesmoke;
+  }
+  .edit{
+    margin:0 3vw;
+    background-color: cyan;
+    color:brown;
+  }
+  .edit:hover{
+    background-color: brown;
+    color:cyan;
+  }
+
+  .link:hover{
+    text-decoration:none;
+    font-weight: bold;
+    color:red;
+    text-shadow: 2px 2px black;
+  }
+
+  .info{
+    font-size: 3em;
+    color:crimson;
+    margin:4vw;
+    text-shadow: 3px 3px  black;
+    font-weight: bold;
+    font-family: Arial black, Helvetica, sans-serif;
   }

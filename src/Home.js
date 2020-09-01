@@ -1,17 +1,31 @@
 import React from "react";
 import axios from "axios";
-
+import Form from './components/From'
 class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state={
       groceryName: "",
-      quantity:0
+      quantity:""
     }
   }
 
   handleInputChange = event => {
     const {name,value} = event.target
+    if(name=='quantity'){
+      const letters = /^[A-Za-z]+$/;
+      if(/[a-z]+$/i.test(value)){
+        alert('Please input numeric characters only');
+        return false;
+      }
+    }
+    if(name==='groceryName'){
+      const numbers = /^[0-9]+$/;
+      if(/\d/.test(value)){
+        alert('Please input alphabets only');
+        return false;
+      }
+    }
     this.setState({
       [name]:value
     });
@@ -19,13 +33,27 @@ class Home extends React.Component {
 
   onSubmit = (e) => {
     e.preventDefault()
+    const numbers = /^[0-9]+$/;
+    const letters = /^[A-Za-z]+$/;
+    if(!this.state.groceryName.match(letters) && !this.state.quantity.match(numbers)){
+      alert('invalid inputs');
+      this.setState({
+        groceryName:"",
+        quantity:""
+      })
+      return false;
+    }
     const grocery={
         groceryName: this.state.groceryName,
         quantity:this.state.quantity
       }
+      this.setState({
+        groceryName:"",
+        quantity:""
+      })
       axios.post('http://localhost:8080/add',grocery)
       .then(res=>{
-        console.log('obj added ',res.data)
+        alert('grocery added!')
       })
   };
   
@@ -34,35 +62,13 @@ class Home extends React.Component {
     return (
         <div>
           <div className="grocery-header">ADD GROCIRIES</div>
-          <div
-                className="input-group-prepend mt-4"
-                style={{ justifyContent: "center" }}
-                >
-                <input
-                    type="text"
-                    className="form-control"
-                    aria-label="Small"
-                    aria-describedby="inputGroup-sizing-sm"
-                    style={{ width: "50%" }}
-                    name='groceryName'
-                    placeholder='enter grocery name'
-                    value={this.state.groceryName}
-                    onChange={this.handleInputChange}
-                />
-                &nbsp;
-                <input
-                    type="text"
-                    className="form-control"
-                    aria-label="Small"
-                    aria-describedby="inputGroup-sizing-sm"
-                    style={{ width: "20%" }}
-                    name='quantity'
-                    placeholder='value in kg'
-                    value={this.state.quantity}
-                    onChange={this.handleInputChange}
-                />
-                <button onClick={this.onSubmit}>Add Grocery</button>
-          </div>
+          <Form
+            groceryName={this.state.groceryName}
+            quantity={this.state.quantity}
+            handleInputChange={this.handleInputChange}
+            onSubmit={this.onSubmit}
+            submitStatement={"Save Item"}
+          />
         </div>
     );
   }

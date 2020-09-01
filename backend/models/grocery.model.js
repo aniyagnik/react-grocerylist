@@ -1,6 +1,7 @@
 const mongoose=require('mongoose')
 const Schema = mongoose.Schema
 
+//schema
 const gSchema=new Schema({
         groceryName: { type: String, required: true },
         quantity: { type: String, required: true },

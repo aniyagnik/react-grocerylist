@@ -1,100 +1,180 @@
 import React from "react";
+import axios from "axios";
 import Grocery from "./components/Grocery";
+
+
 
 class ViewGroceryList extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      grocery: [
-        {
-          id: 0,
-          name: "item1",
-          isDone: false
-        }
-      ]
+      grocery: [],
+      groceryName:"",
+      quantity:"",
+      deleteGrocery:[]
     }
 
   }
-  handleOnClick = () => {
-    this.setState({
-      grocery: [
-        ...this.state.grocery,
-        {
-          id: this.state.grocery.length + 1,
-          name: this.state.inputValue,
-          isDone: false
-        }
-      ]
-    });
-  };
 
-  handleToggle = todo => {
-    let grocery = this.state.grocery.map(item => {
-      if (item.id === todo.id) {
-        console.log("in");
-        return {
-          id: item.id,
-          name: item.name,
-          isDone: !item.isDone
-        };
-      } else {
-        console.log("out");
-        return item;
+
+  
+  handleInputChange = event => {
+    const {name,value} = event.target
+    if(name=='quantity'){
+      const letters = /^[A-Za-z]+$/;
+      if(/[a-z]+$/i.test(value)){
+        alert('Please input numeric characters only');
+        return false;
       }
-    });
+    }
+    if(name==='groceryName'){
+      const numbers = /^[0-9]+$/;
+      if(/\d/.test(value)){
+        alert('Please input alphabets only');
+        return false;
+      }
+    }
     this.setState({
-      grocery
+      [name]:value
     });
   };
-   
-    deleteItem = (todo) => {
-    let grocery = this.state.grocery.filter(item =>todo.id!==item.id)
-       this.setState({
-      grocery
-    });
+
+    onSubmit = (ids) => {
+      //e.preventDefault()
+        if(/[a-z]+$/i.test(this.state.quantity) || /\d/.test(this.state.groceryName)){  
+          this.setState({
+            groceryName:"",
+            quantity:""
+          })
+          alert('invalid input...');
+          return false;
+        }
     
+        const grocery={
+          groceryName: this.state.groceryName,
+          quantity:this.state.quantity,
+          id:ids
+        }
+        this.setState({
+          groceryName:"",
+          quantity:""
+        })
+        axios.post( `http://localhost:8080/ViewGroceryList/update`,grocery)
+        .then(res=>{
+          alert('grocery updated!')
+        })
+    };
+    
+  changeState=()=>{
+    let ar=[];
+          this.state.grocery.forEach(ele=>{
+            
+          })
+          
+          this.setState(prevState=>{
+            let ar=[];
+            prevState.grocery.forEach(ele=>{
+              this.state.deleteGrocery.forEach(s=>{
+                if(s!=ele._id){
+                  ar.push(ele)
+                }
+              })
+            })
+            return {
+              deleteGrocery:[],
+              grocery:ar
+            }
+          })
+  }
+    deleteSelectedGrocery=()=>{
+      console.log(Array.isArray(this.state.deleteGrocery) && this.state.deleteGrocery.length>0)
+      if(Array.isArray(this.state.deleteGrocery) && this.state.deleteGrocery.length){
+        axios.post( `http://localhost:8080/ViewGroceryList/delete`,{deleteGrocery:this.state.deleteGrocery})
+        .then(res=>{
+          this.changeState()
+          alert('selected groceries deleted!')
+        })
+      }
+      else{
+        alert('No grocery item selected')
+      }
+    }
+    
+  deleteAllGroceries= () => {
+      const joined = this.state.grocery.map(e=>e._id);
+      console.log("asd ",joined)
+    axios.post( `http://localhost:8080/ViewGroceryList/delete`,{deleteGrocery:joined})
+        .then(res=>{
+          this.changeState()
+          this.setState({deleteGrocery:[],grocery:[]})
+          alert('all groceries deleted!')
+        })
   };
 
-  
-  deleteStriked = () => {
-    let grocery = this.state.grocery.filter(item =>item.isDone===false)
-       this.setState({
-      grocery
-    });
-  };
+  handleChecks=(event)=>{
+    const {value}=event.target
+    console.log("S ",value)
+    console.log("sadfdas ",this.state.deleteGrocery)
+    let ar = [...this.state.deleteGrocery];
+    const index = ar.indexOf(value)
+    
+    if (index !== -1) {
+      console.log("exists")
+      ar.splice(index, 1);
+      this.setState({deleteGrocery: ar});
+    
+    }
+    else{
+      console.log('no exist')
+      const joined = this.state.deleteGrocery.concat(value);
+      this.setState({ deleteGrocery: joined })
+    }  
+  }
 
-  
-  deleteAll= () => {
-    let grocery = this.state.grocery.filter(item =>item.id=== item.id+1)
-       this.setState({
-      grocery
-    });
-  };
-
-  
+  async componentDidMount() { 
+    console.log("SDfsdf")
+    axios.post('http://localhost:8080/ViewGroceryList')
+      .then(res=>{
+        console.log('objs : ',res.data)
+        this.setState({
+          grocery:res.data
+        })
+      })
+  }  
   render() {
     return (
         <div>
-          <div className="grocery-header">Todo List</div>
+          <div className="grocery-header">Grocery List</div>
+            {Array.isArray(this.state.grocery) && this.state.grocery.length ?
+              <div>
                 <div
                 className="input-group-prepend mt-4"
                 style={{ justifyContent: "center" }}
                 >
                 
-                <button onClick={this.deleteStriked}>Delete Striked</button>
-                 |||||||| 
-                <button onClick={this.deleteAll}>Delete All</button>
+                <button className="del" onClick={this.deleteSelectedGrocery}>Delete Selected</button>
+                 
+                <button className="del" onClick={this.deleteAllGroceries}>Delete All</button>
                 
                 </div>
-                {this.state.grocery.map(item => (
-                <Grocery
-                    title={item.name}
-                    deleteItem={this.deleteItem}
-                    handleClick={this.handleToggle}
-                    todo={item}
-                />
-                ))}
-
+                <center>
+                  {this.state.grocery.map(item => (
+                  <Grocery
+                      id={item._id}
+                      groceryName={item.groceryName}
+                      quantity={item.quantity}
+                      handleInputChange={this.handleInputChange}
+                      onSubmit={this.onSubmit}
+                      handleChecks={this.handleChecks}
+                      todo={item}
+                  />
+                  ))}
+                </center>
+              </div>  
+              : 
+              <center className="info">
+                YOUR GROCERY LIST IS EMPTY
+              </center>}
         </div>
     );
   }
