@@ -20,15 +20,13 @@ class ViewGroceryList extends React.Component {
   
   handleInputChange = event => {
     const {name,value} = event.target
-    if(name=='quantity'){
-      const letters = /^[A-Za-z]+$/;
+    if(name==='quantity'){
       if(/[a-z]+$/i.test(value)){
         alert('Please input numeric characters only');
         return false;
       }
     }
     if(name==='groceryName'){
-      const numbers = /^[0-9]+$/;
       if(/\d/.test(value)){
         alert('Please input alphabets only');
         return false;
@@ -66,25 +64,21 @@ class ViewGroceryList extends React.Component {
     };
     
   changeState=()=>{
-    let ar=[];
-          this.state.grocery.forEach(ele=>{
-            
-          })
-          
-          this.setState(prevState=>{
-            let ar=[];
-            prevState.grocery.forEach(ele=>{
-              this.state.deleteGrocery.forEach(s=>{
-                if(s!=ele._id){
-                  ar.push(ele)
-                }
-              })
-            })
-            return {
-              deleteGrocery:[],
-              grocery:ar
-            }
-          })
+    let array = this.state.grocery;
+    console.log('grocery ',this.state.grocery)
+    console.log('del ',this.state.deleteGrocery)     
+    console.log('ar ',array)
+    this.state.deleteGrocery.forEach(s=>{
+      let index = array.findIndex(x => x._id ===s);
+      console.log('index ',index)
+      array.splice(index, 1);
+    })
+    console.log('ar ',array)
+
+    this.setState({
+      deleteGrocery:[],
+      grocery:array
+    })        
   }
     deleteSelectedGrocery=()=>{
       console.log(Array.isArray(this.state.deleteGrocery) && this.state.deleteGrocery.length>0)

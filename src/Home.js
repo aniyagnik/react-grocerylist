@@ -12,15 +12,13 @@ class Home extends React.Component {
 
   handleInputChange = event => {
     const {name,value} = event.target
-    if(name=='quantity'){
-      const letters = /^[A-Za-z]+$/;
+    if(name==='quantity'){
       if(/[a-z]+$/i.test(value)){
         alert('Please input numeric characters only');
         return false;
       }
     }
     if(name==='groceryName'){
-      const numbers = /^[0-9]+$/;
       if(/\d/.test(value)){
         alert('Please input alphabets only');
         return false;

@@ -32,13 +32,7 @@ class Grocery extends React.Component {
         
         <Modal open={open} onClose={this.onCloseModal}>
             <h2>EDIT YOUR GROCERY HERE</h2>
-            {/* <Form
-            groceryName={this.props.groceryName}
-            quantity={this.props.quantity}
-            handleInputChange={this.handleInputChange}
-            onSubmit={this.onSubmit}
-            submitStatement={"Update Item"}
-          /> */}
+            
           <div
                 className="input-group-prepend mt-4"
                 style={{ justifyContent: "center" }}
