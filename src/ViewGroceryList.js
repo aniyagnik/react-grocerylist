@@ -65,15 +65,10 @@ class ViewGroceryList extends React.Component {
     
   changeState=()=>{
     let array = this.state.grocery;
-    console.log('grocery ',this.state.grocery)
-    console.log('del ',this.state.deleteGrocery)     
-    console.log('ar ',array)
     this.state.deleteGrocery.forEach(s=>{
       let index = array.findIndex(x => x._id ===s);
-      console.log('index ',index)
       array.splice(index, 1);
     })
-    console.log('ar ',array)
 
     this.setState({
       deleteGrocery:[],
@@ -81,7 +76,6 @@ class ViewGroceryList extends React.Component {
     })        
   }
     deleteSelectedGrocery=()=>{
-      console.log(Array.isArray(this.state.deleteGrocery) && this.state.deleteGrocery.length>0)
       if(Array.isArray(this.state.deleteGrocery) && this.state.deleteGrocery.length){
         axios.post( `http://localhost:8080/ViewGroceryList/delete`,{deleteGrocery:this.state.deleteGrocery})
         .then(res=>{
@@ -96,7 +90,6 @@ class ViewGroceryList extends React.Component {
     
   deleteAllGroceries= () => {
       const joined = this.state.grocery.map(e=>e._id);
-      console.log("asd ",joined)
     axios.post( `http://localhost:8080/ViewGroceryList/delete`,{deleteGrocery:joined})
         .then(res=>{
           this.changeState()
@@ -107,29 +100,23 @@ class ViewGroceryList extends React.Component {
 
   handleChecks=(event)=>{
     const {value}=event.target
-    console.log("S ",value)
-    console.log("sadfdas ",this.state.deleteGrocery)
     let ar = [...this.state.deleteGrocery];
     const index = ar.indexOf(value)
     
     if (index !== -1) {
-      console.log("exists")
       ar.splice(index, 1);
       this.setState({deleteGrocery: ar});
     
     }
     else{
-      console.log('no exist')
       const joined = this.state.deleteGrocery.concat(value);
       this.setState({ deleteGrocery: joined })
     }  
   }
 
   async componentDidMount() { 
-    console.log("SDfsdf")
     axios.post('http://localhost:8080/ViewGroceryList')
       .then(res=>{
-        console.log('objs : ',res.data)
         this.setState({
           grocery:res.data
         })
